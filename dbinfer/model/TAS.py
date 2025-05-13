@@ -6,6 +6,8 @@ from dgl.nn.functional import edge_softmax
 
 # TAS code init commit for the repo
 # Test Version
+
+# Compute the score of each attribute by TAS module
 class TabularAttributeSelector(nn.Module):
     """
     TAS module using DGL for bipartite attention from row nodes to attribute nodes.
@@ -43,6 +45,7 @@ class TabularAttributeSelector(nn.Module):
         g.nodes['row'].data['v'] = self.W_v(feat_row)
         g.nodes['attr'].data['v'] = self.W_v(feat_attr)
 
+        # Compute Score
         def compute_score(edges):
             score = (edges.src['q'] * edges.dst['k']).sum(dim=-1)
             return {'e': score / self.sqrt_dk}
@@ -55,7 +58,7 @@ class TabularAttributeSelector(nn.Module):
         weighted = alpha * torch.log1p(alpha)
         g.edges['has_attr'].data['w'] = weighted
 
-
+        
         g.update_all(
             message_func=dgl.fn.copy_e('w', 'w'),
             reduce_func=dgl.fn.sum('w', 'score'),
@@ -64,6 +67,8 @@ class TabularAttributeSelector(nn.Module):
         scores = g.nodes['attr'].data['score']  # shape (n_attrs,)
 
         S = torch.softmax(scores, dim=0)
+
+        # return the score
         return S
 
 if __name__ == "__main__":
