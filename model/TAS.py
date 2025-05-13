@@ -4,6 +4,8 @@ import torch.nn.functional as F
 import dgl
 from dgl.nn.functional import edge_softmax
 
+# TAS code init commit for the repo
+# Test Version
 class TabularAttributeSelector(nn.Module):
     """
     TAS module using DGL for bipartite attention from row nodes to attribute nodes.
