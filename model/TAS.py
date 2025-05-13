@@ -4,9 +4,6 @@ import torch.nn.functional as F
 import dgl
 from dgl.nn.functional import edge_softmax
 
-# ---------------------------------------------
-# Tabular Attribute Selector (TAS) with DGL
-# ---------------------------------------------
 class TabularAttributeSelector(nn.Module):
     """
     TAS module using DGL for bipartite attention from row nodes to attribute nodes.
@@ -17,10 +14,8 @@ class TabularAttributeSelector(nn.Module):
     """
     def __init__(self, in_dim: int, proj_dim: int):
         super(TabularAttributeSelector, self).__init__()
-        # Learnable linear transformations for queries and keys
         self.W_q = nn.Linear(in_dim, proj_dim, bias=False)
         self.W_k = nn.Linear(in_dim, proj_dim, bias=False)
-        # Optional linear for values if message passing is needed
         self.W_v = nn.Linear(in_dim, proj_dim, bias=False)
         self.sqrt_dk = proj_dim ** 0.5
 
