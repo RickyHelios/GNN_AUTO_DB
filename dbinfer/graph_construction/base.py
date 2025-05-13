@@ -15,7 +15,7 @@
 import abc
 from pathlib import Path
 
-from dbinfer_bench import DBBRDBDataset
+from dbinfer_bench import DBBRDBDataset 
 
 class GraphConstruction:
 
