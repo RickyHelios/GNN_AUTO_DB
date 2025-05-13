@@ -18,7 +18,7 @@ def tgs_sampling(g: dgl.DGLHeteroGraph,
     for h in range(max_hops):
         next_frontier = []
         for v in frontier:
-            # 1) Degree-1 chain expansion (row → attr → row → ...)
+            # 1) Degree-1-to-1 chain expansion (row → attr → row → ...)
             u = v
             while True:
                 nbrs = g.successors(u, etype='has_attr').tolist()
@@ -31,9 +31,8 @@ def tgs_sampling(g: dgl.DGLHeteroGraph,
                         continue
                 break
 
-            # 2) Sample neighbors of the chain endpoint u
+            # Sample neighbors of the graph started with u
             nbrs = g.successors(u, etype='has_attr').tolist()
-            # Filter out already-sampled nodes
             candidates = [w for w in nbrs if w not in sampled]
             # Deterministic or random sampling: here we take the first k
             selected = candidates[:max_sample_per_hop]
@@ -45,9 +44,9 @@ def tgs_sampling(g: dgl.DGLHeteroGraph,
 
     return list(sampled)
 
-# Example usage at bottom of TAS.py
+# Usage example, corresponding with TAS
 if __name__ == "__main__":
-    # ... (after building g and computing TAS scores) ...
+    # After the TAS usage, the component g is constructed by TAS
     seeds = torch.tensor([0, 1])
     sampled_nodes = tgs_sampling(g, seeds, max_hops=3, max_sample_per_hop=4)
     print("TGS sampled node IDs:", sampled_nodes)
